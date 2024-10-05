@@ -1,57 +1,96 @@
-def reverse(*args):  # разворачивает
-    result = list()
-    for arg in list(*args):
-        rev_seq = str(arg[::-1])
-        result.append(rev_seq)
-    if len(result) == 1:
-        return result[0]
+def reverse(*args: tuple):
+    '''
+    Function reverse, transforms initial sequences to reversed
+
+    Args: tuple
+
+    Returns: str or list
+    '''
+    rev_seqs = list()
+    for seq in list(*args):
+        rev_seq = str(seq[::-1])
+        rev_seqs.append(rev_seq)
+    if len(rev_seqs) == 1:
+        return rev_seqs[0]
     else:
-        return result
-    
-def complement(*args):  # заменяет на комплементарную
-    result = list()
+        return rev_seqs
+
+
+def complement(*args: tuple):
+    '''
+    Function complement, transforms initial sequences to complemented
+
+    Args: tuple
+
+    Returns: str or list
+    '''
+    compl_seqs = list()
     init_line = "ACGTUacgtu"
     exit_line = "TGCAAtgcaa"
-    for arg in list(*args):
-        tab = str(arg).maketrans(init_line, exit_line)
-        compl_seq = str(arg).translate(tab)
-        result.append(compl_seq)
-    if len(result) == 1:
-        return result[0]
+    for seq in list(*args):
+        tab = str(seq).maketrans(init_line, exit_line)
+        compl_seq = str(seq).translate(tab)
+        compl_seqs.append(compl_seq)
+    if len(compl_seqs) == 1:
+        return compl_seqs[0]
     else:
-        return result
-    
-def reverse_complement(*args):  # разворачивает и заменяет на комплементарную
-    result = list()
-    for arg in list(args):
-        rev_seq = reverse(arg)
+        return compl_seqs
+
+
+def reverse_complement(*args: tuple):
+    '''
+    Function reverse_complement, transforms each of initial sequences to reversed and complemented
+
+    Args: tuple
+
+    Returns: str or list
+    '''
+    rev_compl_seqs = list()
+    for seq in list(args):
+        rev_seq = reverse(seq)
         rev_compl_seq = complement(rev_seq)
-        result.append(''.join(rev_compl_seq))
-    if len(result) == 1:
-        return result[0]
+        rev_compl_seqs.append(''.join(rev_compl_seq))
+    if len(rev_compl_seqs) == 1:
+        return rev_compl_seqs[0]
     else:
-        return result
-    
-def transcribe(*args):  # ДНК - вернет РНК, РНК - саму себя
-    result = list()
-    for arg in list(*args):
-        if str(arg).upper().find("U") != -1:
-            result.append(arg)
+        return rev_compl_seqs
+
+
+def transcribe(*args: tuple):
+    '''
+    Function transcribe, transforms each of initial sequences to RNA if DNA or returns inintial sequence if RNA
+
+    Args: tuple
+
+    Returns: str or list
+    '''
+    transcr_seqs = list()
+    for seq in list(*args):
+        if str(seq).upper().find("U") != -1:
+            transcr_seqs.append(seq)
         else:
-            trans_seq = arg.replace("T", "U").replace("t", "u")
-            result.append(trans_seq)
-    if len(result) == 1:
-        return result[0]
+            trans_seq = seq.replace("T", "U").replace("t", "u")
+            transcr_seqs.append(trans_seq)
+    if len(transcr_seqs) == 1:
+        return transcr_seqs[0]
     else:
-        return result
-    
-def g_c_percent(*args):  # считает ГЦ-состав последовательности
-    result = list()
-    for arg in list(*args):
-        percent = (str(arg).lower().count("g") +
-                   str(arg).lower().count("c"))*100/len(arg)
-        result.append(round(percent, 2))
-    if len(result) == 1:
-        result = int(result)
+        return transcr_seqs
+
+
+def g_c_bound(*args: tuple):
+    '''
+    Function g_c_bound, counts GC bound of each sequence
+
+    Args: tuple
+
+    Returns: int or list
+    '''
+    gc_bounds = list()
+    for seq in list(*args):
+        bound = (str(seq).lower().count("g") +
+                 str(seq).lower().count("c"))*100/len(seq)
+        gc_bounds.append(round(bound, 2))
+    if len(gc_bounds) == 1:
+        gc_bounds = int(gc_bounds)
     else:
-        return result
+        return gc_bounds
