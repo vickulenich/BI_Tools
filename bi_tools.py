@@ -36,7 +36,7 @@ def run_dna_rna_tools(*args: tuple):
         return seqf.g_c_bound(seqs)
 
 
-def filter_fastq(seqs: dict, gc_bounds: tuple=(0, 100), length_bounds: tuple=(0, 2**32), quality_threshold: int=0):
+def filter_fastq(seqs: dict, gc_bounds: tuple = (0, 100), length_bounds: tuple = (0, 2**32), quality_threshold: int = 0):
     '''
     Function filter_fastq, drop fastq-sequences not meeting the specified length, gc bound and quality
 
