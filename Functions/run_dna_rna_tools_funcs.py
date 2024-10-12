@@ -25,7 +25,8 @@ def complement(seq: str) -> str:
 
 def reverse_complement(seq: str) -> str:
     '''
-    Function reverse_complement, transforms of initial sequence to reversed and complemented
+    Function reverse_complement, transforms
+    initial sequence to reversed and complemented
 
     Args: str
 
@@ -38,7 +39,8 @@ def reverse_complement(seq: str) -> str:
 
 def transcribe(seq: str) -> str:
     '''
-    Function transcribe, transforms initial sequence to RNA if DNA or returns inintial sequence if RNA
+    Function transcribe, transforms initial sequence
+    to RNA if DNA or returns inintial sequence if RNA
 
     Args: str
 
@@ -58,6 +60,6 @@ def get_g_c_bound(seq: str) -> float:
 
     Returns: float
     '''
-    gc_bound = (str(seq).lower().count("g") +
-                 str(seq).lower().count("c"))*100/len(seq)
+    gc_bound = (str(seq).lower().count("g")
+                + str(seq).lower().count("c"))*100/len(seq)
     return gc_bound

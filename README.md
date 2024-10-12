@@ -1,34 +1,40 @@
 # BI_Tools
 
-## Описание репозитория
+## Repository description
 
-**BI_Tools** - набор утилит для работы с нуклеотидным последовательностями (ДНК и РНК) и фильтрации fastq-последовательностей
+**BI_Tools** is a set of utilities for working with nucleotide sequences (DNA and RNA), filtering fastq-sequences, modifying fasta-files, parsing BLAST output and selecting genes form gbk-files
 
-**Автор**: [*Куленич Виктория*](https://github.com/vickulenich)
+**Author**: [*Kulenich Viktoriia*](https://github.com/vickulenich)
 
-## Содержание
+## Content
 
-### [Установка и запуск](#установка-и-запуск)
-### [Входные данные](#входные-данные)
-### [Описание доступных операций](#описание-доступных-операций)
+### [Installation and launch](#installation-and-launch)
+### [Input data](#input-data)
+### [Available operations](#available-operations)
 
-## Установка и запуск
+## Installation and launch
 
-Для установки необходимо клонировать репозиторий:
+For installation you need to clone the repository:
 
     git clone git@github.com:vickulenich/BI_Tools.git
 
-Затем нужно перейти в папку данного репозитория и запустить главный скрипт:
+Then you need to go to the root directory of this repository and run the script you need:
 
     cd BI_Tools
     python bi_tools.py
+    python bio_files_processor.py
 
-Введите нужную функцию и аргументы к ней в соответствии с требованиями к входным данным.
+Enter the required function and its arguments according to the input requirements
 
-## Входные данные
+## Input data
 
-Программа состоит из двух основных функций:
-1. *run_dna_rna_tools*, принимает на вход кортеж строк, состоящий из любого числа строк нуклеотидных последовательностей и последнего аргумента с названием любой из [доступных операций](#описание-доступных-операций), проверяет, являются ли данные последовательности ДНК или РНК, и производит выбранное пользователем преобразование. Пример входных данных:
+The program consists of two main scripts. 
+
+bi_tools.py includes two main functions:
+
+1. *run_dna_rna_tools* takes as input any number of nucleotide sequence strings and the last argument with the name of one of the [available operations](#available-operations) and performs a user-selected transformation.
+
+Input data example:
 
 > run_dna_rna_tools("ATGca", "AgTCG", "transcribe")
 >
@@ -36,27 +42,58 @@
 >
 > run_dna_rna_tools("AUaG", "CUacG", "AcgTcAG", "complement")
 
-2. *filter_fastq*, принимает на вход:
-   1) *seqs* - словарь, состоящий из ключей, соответствующего индексу fastq-последовательности, и соответствующих ключам двух значений, первое из которых - последовательность нуклеотидов, второе - последовательность, характеризующая качество первой последовательности
-   2) *length_bounds* - кортеж, содержащий два целых числа, соответствующих нижней и верхней границе требуемой длины fastq-последовательности, по умолчанию принимает значение (0, 2^32)
-   3) *gc_bounds* - кортеж, содержащий два целых числа, соответствующих нижней и верхней границе требуемого ГЦ-состава fastq-последовательности, по умолчанию принимает значение (0, 100)
-   4) *quality_threshold* - целое число, характеризующее нижний порог качества для fastq-последовательности, по умолчанию принимает значение 0
+2. *filter_fastq* takes as input:
+   1) *input_fastq* - a path to the input fastq file (.fastq)
+   2) *output_fastq* - a path to the output fastq file (.fastq)
+   3) *length_bounds* - a tuple containing two integers corresponding to the lower and upper bounds of the required fastq-sequence length, by default takes the value (0, 2^32)
+   4) *gc_bounds* - a tuple containing two integers corresponding to the lower and upper bounds of the required GC-composition of the fastq-sequence, by default takes the value (0, 100)
+   5) *quality_threshold* - an integer corresponding to the lower basecall quality threshold for the fastq-sequence, by default takes the value 0
 
-Пример входных данных:
+Input data example:
 
-> filter_fastq(
->   seqs={'@SRX079801': ('ACAGCAACATAAACAT', 'FGGGFGGGFGGGFGDF'),
->   '@SRX079812': ('AGTGAGACACCCCTGAACATTCCTA', '<98;<@@@:@CD@BCCDD=DBBCEB')},
->   length_bounds=(0,15), gc_bounds=(5,10), quality_threshold=20)
+> filter_fastq(input_fastq = "example_data.fastq", length_bounds=(0,15), gc_bounds=(5,10), quality_threshold=20)
 
-## Описание доступных операций
+bio_files_processor.py includes three functions:
 
-Функция run_dna_rna_tools позволяет произвести над нуклеотидной последовательностью следующие операции:
+1. *convert_multiline_fasta_to_oneline* takes as input a path to the input fasta-file (.fasta/.fa) and optionally a a path to the output fasta-file, reads input file where the sequence (DNA/RNA/protein etc.) can be split into several lines and saves it to a new fasta file where each sequence fits on one line
 
-- *reverse* - возвращает последовательность, обратную исходной
-- *complement* - возвращает последовательность, комплементарную исходной
-- *reverse_complement* - возвращает последовательность, обратную и комплементарную исходной
-- *transcribe* - если исходная последовательность являлась ДНК, возвращает соответствующую последовательность РНК, если исходная последовательность являлась РНК, возвращает саму исходную последовательность
-- *g_c_bound* - считает ГЦ-состав последовательности в % с округлением до 2 десятичных знаков
+Input data example:
 
-Функция filter_fastq позволяет отобрать fastq-последовательности, соотвествующие заданным требованиям к её длине, ГЦ-составу и уровню качества.
+> convert_multiline_fasta_to_oneline(input_fasta = "example_data.fa", output_fasta = "example_data_output.fa")
+>
+> convert_multiline_fasta_to_oneline(input_fasta = "example_data.fa")
+
+2. *parse_blast_output* takes as input a path to the input txt-file (.txt) and a path to the output txt-file, reads input file, for each QUERY request selects the first row from the Description column and saves the set of obtained proteins in the output file in one column sorted alphabetically
+
+Input data example:
+
+> parse_blast_output(input_file = "example_data.txt", output_file = "example_data.txt")
+
+3. *select_genes_from_gbk_to_fasta* takes as input:
+    1) *input_gbk* - a path to the input gbk-file (.gbk)
+    2) *genes* - list of the selected genes names
+    3) *n_before* - an integer corresponding to the number of genes before each of the genes of interest, by default takes the value 1
+    4) *n_after* - an integer corresponding to the number of genes after each of the genes of interest, by default takes the value 1
+    5) *output_fasta* - name of the output file
+
+Input data example:
+
+> select_genes_from_gbk_to_fasta(input_gbk = "example_data.gbk", genes = ["gene_1", "gene_2", "gene_3"], output_fasta = "example_data.fasta", n_before = 1, n_after = 1)
+
+## Available operations
+
+The run_dna_rna_tools function allows you to perform the following operations on a nucleotide sequence:
+
+- *reverse* - returns the reverse sequence of the original
+- *complement* - returns the complement sequence of the original
+- *reverse_complement* - returns the reverse and complement sequence of the original
+- *transcribe* - returns the corresponding RNA sequence if the original sequence was DNA, or returns the original sequence if the original sequence was RNA
+- *g_c_bound* - calculates the GC content of a sequence in %, rounded to 2 decimal places
+
+The filter_fastq function allows you to select fastq sequences that meet specified requirements for their length, GC composition, and quality level.
+
+The convert_multiline_fasta_to_oneline function allows you to convert the file where the sequence can be split into several lines to a new file where each sequence fits on one line.
+
+The parse_blast_output function allows you to extract the name of the best BLAST match from the database and save all the results in one file - **Unavaliable**
+
+The select_genes_from_gbk_to_fasta function allows you to select a certain number of genes before and after each gene of interest and save their protein sequence to a fasta file that can be sent to the BLAST input - **Unavaliable**
