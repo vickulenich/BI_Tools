@@ -1,96 +1,65 @@
-def reverse(*args: tuple):
+def reverse(seq: str) -> str:
     '''
-    Function reverse, transforms initial sequences to reversed
+    Function reverse, transforms initial sequence to reversed
 
-    Args: tuple
+    Args: str
 
-    Returns: str or list
+    Returns: str
     '''
-    rev_seqs = list()
-    for seq in list(*args):
-        rev_seq = str(seq[::-1])
-        rev_seqs.append(rev_seq)
-    if len(rev_seqs) == 1:
-        return rev_seqs[0]
-    else:
-        return rev_seqs
+    return str(seq[::-1])
 
 
-def complement(*args: tuple):
+def complement(seq: str) -> str:
     '''
-    Function complement, transforms initial sequences to complemented
+    Function complement, transforms initial sequence to complemented
 
-    Args: tuple
+    Args: str
 
-    Returns: str or list
+    Returns: str
     '''
-    compl_seqs = list()
     init_line = "ACGTUacgtu"
     exit_line = "TGCAAtgcaa"
-    for seq in list(*args):
-        tab = str(seq).maketrans(init_line, exit_line)
-        compl_seq = str(seq).translate(tab)
-        compl_seqs.append(compl_seq)
-    if len(compl_seqs) == 1:
-        return compl_seqs[0]
+    tab = str(seq).maketrans(init_line, exit_line)
+    return str(seq).translate(tab)
+
+
+def reverse_complement(seq: str) -> str:
+    '''
+    Function reverse_complement, transforms
+    initial sequence to reversed and complemented
+
+    Args: str
+
+    Returns: str
+    '''
+    rev_seq = reverse(seq)
+    rev_compl_seq = complement(rev_seq)
+    return ''.join(rev_compl_seq)
+
+
+def transcribe(seq: str) -> str:
+    '''
+    Function transcribe, transforms initial sequence
+    to RNA if DNA or returns inintial sequence if RNA
+
+    Args: str
+
+    Returns: str
+    '''
+    if str(seq).upper().find("U") != -1:
+        return seq
     else:
-        return compl_seqs
+        return seq.replace("T", "U").replace("t", "u")
 
 
-def reverse_complement(*args: tuple):
+def get_g_c_bound(seq: str) -> float:
     '''
-    Function reverse_complement, transforms each of initial sequences to reversed and complemented
+    Function g_c_bound, counts GC bound of sequence
 
-    Args: tuple
+    Args: str
 
-    Returns: str or list
+    Returns: float
     '''
-    rev_compl_seqs = list()
-    for seq in list(args):
-        rev_seq = reverse(seq)
-        rev_compl_seq = complement(rev_seq)
-        rev_compl_seqs.append(''.join(rev_compl_seq))
-    if len(rev_compl_seqs) == 1:
-        return rev_compl_seqs[0]
-    else:
-        return rev_compl_seqs
-
-
-def transcribe(*args: tuple):
-    '''
-    Function transcribe, transforms each of initial sequences to RNA if DNA or returns inintial sequence if RNA
-
-    Args: tuple
-
-    Returns: str or list
-    '''
-    transcr_seqs = list()
-    for seq in list(*args):
-        if str(seq).upper().find("U") != -1:
-            transcr_seqs.append(seq)
-        else:
-            trans_seq = seq.replace("T", "U").replace("t", "u")
-            transcr_seqs.append(trans_seq)
-    if len(transcr_seqs) == 1:
-        return transcr_seqs[0]
-    else:
-        return transcr_seqs
-
-
-def g_c_bound(*args: tuple):
-    '''
-    Function g_c_bound, counts GC bound of each sequence
-
-    Args: tuple
-
-    Returns: int or list
-    '''
-    gc_bounds = list()
-    for seq in list(*args):
-        bound = (str(seq).lower().count("g") +
-                 str(seq).lower().count("c"))*100/len(seq)
-        gc_bounds.append(round(bound, 2))
-    if len(gc_bounds) == 1:
-        gc_bounds = int(gc_bounds)
-    else:
-        return gc_bounds
+    gc_bound = (str(seq).lower().count("g")
+                + str(seq).lower().count("c"))*100/len(seq)
+    return gc_bound
