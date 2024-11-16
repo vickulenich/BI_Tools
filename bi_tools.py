@@ -35,7 +35,7 @@ def filter_fastq(input_fastq: str, output_fastq: str,
                  length_bounds: tuple = (0, 2**32),
                  quality_threshold: int = 0):
     '''
-    Function filter_fastq, drop fastq-sequences not meeting specified
+    Function filter_fastq, drops fastq-sequences not meeting specified
     length, gc bound and quality
 
     Args:

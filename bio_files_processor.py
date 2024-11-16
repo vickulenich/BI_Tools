@@ -1,5 +1,5 @@
 def convert_multiline_fasta_to_oneline(input_fasta: str,
-                                       output_fasta: str = None):
+                                       output_fasta: str):
     '''
     Function convert_multiline_fasta_to_oneline,
 
@@ -24,7 +24,7 @@ def convert_multiline_fasta_to_oneline(input_fasta: str,
         print(oneline_fasta)
 
 
-def parse_blast_output(input_file: str, output_file: str):
+def parse_blast_output(input_blast: str, output_file: str):
     '''
     Function convert_multiline_fasta_to_oneline,
 
@@ -34,14 +34,17 @@ def parse_blast_output(input_file: str, output_file: str):
 
     Returns: None
     '''
-#    with open(input_file, 'r') as input_file:
-#        blast_data = input_file.read()
-#
-#    gene_sequences = list()
-#
-#    with open(output_file, 'w') as output_file:
-#        for protein in proteins:
-#            output_file.write(protein + '\n')
+    with open(input_blast, 'r') as input_file:
+        with open(output_file, 'w') as output_file:
+            best_matches  = []
+            for line in input_file:
+                if line.startswith('Description'):
+                    protein = next(input_file).split('  ')[0]
+                    best_matches.append(protein)
+            sorted_matches = sorted(best_matches)
+            for line in sorted_matches:
+                if line.rstrip():
+                    output_file.write(line + '\n')
 
 
 def select_genes_from_gbk_to_fasta(input_gbk: str, genes: list,
@@ -59,10 +62,4 @@ def select_genes_from_gbk_to_fasta(input_gbk: str, genes: list,
 
     Returns: None
     '''
-#    with open(input_gbk, 'r') as input_file:
-#        gbk = input_file.read()
-#
-#    gene_seqs = list()
-#
-#    with open(output_fasta, 'w') as output_file:
-#        output_file.write(''.join(gene_seqs))
+    pass

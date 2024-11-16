@@ -94,6 +94,6 @@ The filter_fastq function allows you to select fastq sequences that meet specifi
 
 The convert_multiline_fasta_to_oneline function allows you to convert the file where the sequence can be split into several lines to a new file where each sequence fits on one line.
 
-The parse_blast_output function allows you to extract the name of the best BLAST match from the database and save all the results in one file - **Unavaliable**
+The parse_blast_output function allows you to extract the name of the best BLAST match from the database and save all the results in one file
 
 The select_genes_from_gbk_to_fasta function allows you to select a certain number of genes before and after each gene of interest and save their protein sequence to a fasta file that can be sent to the BLAST input - **Unavaliable**
