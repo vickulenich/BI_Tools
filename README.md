@@ -30,19 +30,19 @@ Enter the required function and its arguments according to the input requirement
 
 The program consists of two main scripts. 
 
-bi_tools.py includes two main functions:
+bi_tools.py includes two main options:
 
-1. *run_dna_rna_tools* takes as input any number of nucleotide sequence strings and the last argument with the name of one of the [available operations](#available-operations) and performs a user-selected transformation.
+1. Classes DNASequence(), RNASequence() and AminoAcidSequence() take the sequence as an argument and one of the [available operations](#available-operations) as a method
 
 Input data example:
 
-> run_dna_rna_tools("ATGca", "AgTCG", "transcribe")
+> DNASequence("ATGca").transcribe()
 >
-> run_dna_rna_tools("AgTCG", "AcgTcAG", "reverse")
+> RNASequence("AUUUcgca").reverse()
 >
-> run_dna_rna_tools("AUaG", "CUacG", "AcgTcAG", "complement")
+> AminoAcidSequence("MNQYDEKRNGAVLI").get_aa_percentage()
 
-2. *filter_fastq* takes as input:
+2. *filter_fastq* function takes as input:
    1) *input_fastq* - a path to the input fastq file (.fastq)
    2) *output_fastq* - a path to the output fastq file (.fastq)
    3) *length_bounds* - a tuple containing two integers corresponding to the lower and upper bounds of the required fastq-sequence length, by default takes the value (0, 2^32)
@@ -82,13 +82,34 @@ Input data example:
 
 ## Available operations
 
-The run_dna_rna_tools function allows you to perform the following operations on a nucleotide sequence:
+The DNASequence() class allows you to perform the following operations on a nucleotide sequence:
 
+- *get_length* - returns the reverse sequence of the original
+- *get_subsequence* - returns the complemente sequence of the original
+- *print_sequence* - returns the reverse and complement sequence of the original
+- *check_alphabet* - returns True if the initial sequence is DNA sequence
+- *get_g_c_score* - calculates the GC content of a sequence in %, rounded to 2 decimal places
 - *reverse* - returns the reverse sequence of the original
-- *complement* - returns the complement sequence of the original
+- *complement* - returns the complemente sequence of the original
 - *reverse_complement* - returns the reverse and complement sequence of the original
-- *transcribe* - returns the corresponding RNA sequence if the original sequence was DNA, or returns the original sequence if the original sequence was RNA
-- *g_c_bound* - calculates the GC content of a sequence in %, rounded to 2 decimal places
+- *transcribe* - calculates the GC content of a sequence in %, rounded to 2 decimal places
+
+The RNASequence() class allows you to perform the following operations on a nucleotide sequence:
+- *get_length* - returns the reverse sequence of the original
+- *get_subsequence* - returns the complemente sequence of the original
+- *print_sequence* - returns the reverse and complement sequence of the original
+- *check_alphabet* - returns True if the initial sequence is RNA sequence
+- *get_g_c_score* - calculates the GC content of a sequence in %, rounded to 2 decimal places
+- *reverse* - returns the reverse sequence of the original
+- *complement* - returns the complemente sequence of the original
+- *reverse_complement* - returns the reverse and complement sequence of the original
+
+The AminoAcidSequence() class allows you to perform the following operations on a nucleotide sequence:
+- *get_length* - returns the reverse sequence of the original
+- *get_subsequence* - returns the complemente sequence of the original
+- *print_sequence* - returns the reverse and complement sequence of the original
+- *check_alphabet* - returns True if the initial sequence is amino acid sequence
+- *get_aa_percentage* - returns the message about the percentage of polar and non-polar aminoacids in original sequence
 
 The filter_fastq function allows you to select fastq sequences that meet specified requirements for their length, GC composition, and quality level.
 

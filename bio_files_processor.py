@@ -36,7 +36,7 @@ def parse_blast_output(input_blast: str, output_file: str):
     '''
     with open(input_blast, 'r') as input_file:
         with open(output_file, 'w') as output_file:
-            best_matches  = []
+            best_matches = []
             for line in input_file:
                 if line.startswith('Description'):
                     protein = next(input_file).split('  ')[0]
