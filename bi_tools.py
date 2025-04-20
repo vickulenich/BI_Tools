@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from Bio import SeqIO
-from Bio.SeqUtils import GC
+from Bio.SeqUtils import gc_fraction
+
+import argparse
+import logging
 
 
 class BiologicalSequence(ABC):
@@ -68,11 +71,9 @@ class NucleicAcidSequence(BiologicalSequence):
 
         Returns: str
         '''
-        self.sequence = self.reverse()
-        rev_compl_seq = self.complement()
-        return ''.join(rev_compl_seq)
+        return type(self)(self.reverse().complement())
 
-    def get_g_c_score(self) -> float:
+    def get_gc_score(self) -> float:
         '''
         Function g_c_bound, counts GC bound of sequence
 
@@ -80,13 +81,11 @@ class NucleicAcidSequence(BiologicalSequence):
 
         Returns: float
         '''
-        gc_score = (str(self.sequence).lower().count("g")
-                    + str(self.sequence).lower().count("c"))*100/self.get_length()
-        return gc_score
+        return len([base for base in self.sequence if base.upper() in ['G', 'C']])*100/self.get_length()
 
+    @abstractmethod
     def check_alphabet(self) -> bool:
-        valid_nucleotides = set("ACGTUacgtu")
-        return all(nucleotide in valid_nucleotides for nucleotide in self.sequence)
+        pass
 
 
 class DNASequence(NucleicAcidSequence):
@@ -130,7 +129,7 @@ class AminoAcidSequence(BiologicalSequence):
     def print_sequence(self) -> None:
         print(self.sequence)
 
-    def get_aa_percentage(self) -> None:
+    def count_aa_percentage(self) -> None:
         polar_count = 0
         nonpolar_count = 0
 
@@ -145,6 +144,25 @@ class AminoAcidSequence(BiologicalSequence):
     def check_alphabet(self) -> bool:
         valid_amino_acids = set("ACDEFGHIKLMNPQRSTVWY")
         return all(amino_acid in valid_amino_acids for amino_acid in self.sequence)
+
+
+logging.basicConfig(filename='filter_fastq.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+def parse_args_filter_fastq():
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('input_fastq', type=str, help='Path to the input FASTQ file')
+    parser.add_argument('output_fastq', type=str, help='Path to the output FASTQ file')
+    parser.add_argument('--gc_bounds', type=float, nargs=2, default=(0, 100),
+                        help='Lower and upper bounds for GC content')
+    parser.add_argument('--length_bounds', type=int, nargs=2, default=(0, 2**32),
+                        help='Lower and upper bounds for sequence length')
+    parser.add_argument('--quality_threshold', type=int, default=0,
+                        help='Minimum quality score')
+
+    args = parser.parse_args()
+    filter_fastq(args.input_fastq, args.output_fastq, tuple(args.gc_bounds), tuple(args.length_bounds), args.quality_threshold)
 
 
 def filter_fastq(input_fastq: str, output_fastq: str,
@@ -163,12 +181,18 @@ def filter_fastq(input_fastq: str, output_fastq: str,
 
     Returns: None
     '''
-    for record in SeqIO.parse(input_fastq, "fastq"):
-        seq = str(record.seq)
-        gc_content = GC(seq)
-        quality_score = sum(record.letter_annotations["phred_quality"]) / len(record.letter_annotations["phred_quality"])
-        if ((gc_bounds[0] <= gc_content <= gc_bounds[1]) and
-                (length_bounds[0] <= len(seq) <= length_bounds[1]) and
-                (quality_score >= quality_threshold)):
-            with open(output_fastq, 'a') as output_file:
-                SeqIO.write(record, output_file, "fastq")
+    try:
+        for record in SeqIO.parse(input_fastq, "fastq"):
+            seq = str(record.seq)
+            gc_content = gc_fraction(seq)
+            quality_score = sum(record.letter_annotations["phred_quality"]) / len(record.letter_annotations["phred_quality"])
+            if ((gc_bounds[0] <= gc_content <= gc_bounds[1]) and
+                    (length_bounds[0] <= len(seq) <= length_bounds[1]) and
+                    (quality_score >= quality_threshold)):
+                with open(output_fastq, 'a') as output_file:
+                    SeqIO.write(record, output_file, "fastq")
+        logging.info(f"Filtering completed. Filtered sequences were written to {output_fastq}.")
+    except FileNotFoundError:
+        logging.error(f"Input file {input_fastq} not found.")
+    except Exception as e:
+        logging.error(f"Error during processing file: {e}")

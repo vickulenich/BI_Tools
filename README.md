@@ -88,7 +88,7 @@ The DNASequence() class allows you to perform the following operations on a nucl
 - *get_subsequence* - returns the complemente sequence of the original
 - *print_sequence* - returns the reverse and complement sequence of the original
 - *check_alphabet* - returns True if the initial sequence is DNA sequence
-- *get_g_c_score* - calculates the GC content of a sequence in %, rounded to 2 decimal places
+- *get_gc_score* - calculates the GC content of a sequence in %, rounded to 2 decimal places
 - *reverse* - returns the reverse sequence of the original
 - *complement* - returns the complemente sequence of the original
 - *reverse_complement* - returns the reverse and complement sequence of the original
@@ -99,7 +99,7 @@ The RNASequence() class allows you to perform the following operations on a nucl
 - *get_subsequence* - returns the complemente sequence of the original
 - *print_sequence* - returns the reverse and complement sequence of the original
 - *check_alphabet* - returns True if the initial sequence is RNA sequence
-- *get_g_c_score* - calculates the GC content of a sequence in %, rounded to 2 decimal places
+- *get_gc_score* - calculates the GC content of a sequence in %, rounded to 2 decimal places
 - *reverse* - returns the reverse sequence of the original
 - *complement* - returns the complemente sequence of the original
 - *reverse_complement* - returns the reverse and complement sequence of the original
@@ -109,7 +109,7 @@ The AminoAcidSequence() class allows you to perform the following operations on 
 - *get_subsequence* - returns the complemente sequence of the original
 - *print_sequence* - returns the reverse and complement sequence of the original
 - *check_alphabet* - returns True if the initial sequence is amino acid sequence
-- *get_aa_percentage* - returns the message about the percentage of polar and non-polar aminoacids in original sequence
+- *count_aa_percentage* - returns the message about the percentage of polar and non-polar aminoacids in original sequence
 
 The filter_fastq function allows you to select fastq sequences that meet specified requirements for their length, GC composition, and quality level.
 
